@@ -1,8 +1,8 @@
 import "dotenv/config";
-import express, { Request, Response } from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import cors from "cors";
-
 import connectDB from "./config/db.js";
+import authRouter from "./routes/authRoutes.js";
 
 const app = express();
 await connectDB();
@@ -15,6 +15,16 @@ const port = process.env.PORT || 4000;
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Server is Live!');
+});
+app.use('/api/auth', authRouter);
+
+// GLOBAL ERROR HANDLER
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  console.error(err.stack);
+  res.status(500).json({
+    message: err.message || 'Something went wrong!',
+    stack: process.env.NODE_ENV === 'production' ? null : err.stack
+  });
 });
 
 app.listen(port, () => {
