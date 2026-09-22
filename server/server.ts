@@ -6,6 +6,7 @@ import authRouter from "./routes/authRoutes.js";
 import restaurantRoute from "./routes/restaurantRoutes.js";
 import bookingRouter from "./routes/bookingRoutes.js";
 import ownerRouter from "./routes/ownerRoutes.js";
+import adminRouter from "./routes/adminRoutes.js";
 
 const app = express();
 await connectDB();
@@ -17,13 +18,11 @@ app.use(express.json());
 const port = process.env.PORT || 4000;
 
 // Routes
-app.get('/', (req: Request, res: Response) => {
-  res.send('Server is Live!');
-});
 app.use('/api/auth', authRouter);
 app.use('/api/restaurants', restaurantRoute);
 app.use('/api/bookings', bookingRouter);
-app.use('/api/owner', ownerRouter)
+app.use('/api/owner', ownerRouter);
+app.use('/api/admin', adminRouter);
 
 // GLOBAL ERROR HANDLER
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
