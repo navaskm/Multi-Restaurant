@@ -10,6 +10,8 @@ import { ShieldCheckIcon, CheckCircleIcon, BarChart3Icon } from "lucide-react";
 import AdminApprovals from "../../components/admin/AdminApprovals.tsx";
 import AdminStats from "../../components/admin/AdminStats.tsx";
 import { dummyAdminStats, dummyRestaurant } from "../../assets/assets.ts";
+import { api } from "../../lib/api.ts";
+import toast from "react-hot-toast";
 
 export default function AdminDashboard() {
     const { logout } = useAppContext();
@@ -20,14 +22,39 @@ export default function AdminDashboard() {
     const [btnLoading, setBtnLoading] = useState<string | null>(null);
 
     const fetchAdminData = async () => {
-        setRestaurants(dummyRestaurant);
-        setStats(dummyAdminStats);
-        setLoading(false);
+        setLoading(true);
+
+        try {
+            const rRes = await api.get("/admin/restaurants");
+            setRestaurants(rRes.data);
+
+            const sRes = await api.get("/admin/stats");
+            setStats(sRes.data);
+        } catch (error: any) {
+            toast.error(error?.response?.data?.message || "Update failed");
+        } finally {
+            setLoading(false);
+        };
     };
 
     const handleApproveStatus = async (restaurantId: string, status: "approved" | "rejected") => {
-        console.log(restaurantId, status);
-        setBtnLoading(null);
+        setBtnLoading(restaurantId);
+
+        try {
+            await api.put(`/admin/restaurants/${restaurantId}/approve`, {status});
+            toast.success(`Restaurant has been marked has ${status.toUpperCase()}`);
+
+            // Reload local list and status
+            const rRes = await api.get("/admin/restaurants");
+            setRestaurants(rRes.data);
+
+            const sRes = await api.get("/admin/stats");
+            setStats(sRes.data);
+        } catch (error: any) {
+            toast.error(error?.response?.data?.message || "Failed to update restaurant approval status");
+        } finally {
+            setBtnLoading(null);
+        }
     };
 
     useEffect(() => {

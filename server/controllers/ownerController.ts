@@ -129,7 +129,7 @@ export const updateOwnerRestaurant = async (req: AuthenticatedRequest, res: Resp
     };
 
     const updated = await restaurant.save();
-    res.json(200).json(updated);
+    res.status(200).json(updated);
 
   } catch (error: any) {
     res.status(400).json({ message: error.message });

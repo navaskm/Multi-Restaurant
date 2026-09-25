@@ -6,7 +6,9 @@ import Footer from "../components/Footer.tsx";
 import RestaurantCard from "../components/RestaurantCard.tsx";
 import AuthModal from "../components/AuthModal.tsx";
 import { SlidersHorizontal, Search as SearchIcon, X, Check, MapPin, SearchXIcon } from "lucide-react";
-import { dummyRestaurant } from "../assets/assets.ts";
+import axios from "axios";
+import toast from "react-hot-toast";
+import { api } from "../lib/api.ts";
 
 export default function Search() {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -36,9 +38,20 @@ export default function Search() {
     }, [searchVal, locationVal]);
 
     useEffect(() => {
+        setLoading(true);
+
         const fetchRestaurants = async () => {
-            setRestaurants(dummyRestaurant);
-            setLoading(false);
+            try {
+                // Construct query string directly from searchparams
+                const res = await api.get(`/restaurants?${searchParams.toString()}`);
+                setRestaurants(res.data);
+            } catch (error) {
+                if(axios.isAxiosError(error)){
+                    toast.error(error.response?.data?.message || error.message)
+                }
+            } finally {
+                setLoading(false);
+            }
         };
 
         fetchRestaurants();

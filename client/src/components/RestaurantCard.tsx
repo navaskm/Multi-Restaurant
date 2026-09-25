@@ -31,7 +31,7 @@ export default function RestaurantCard({ restaurant }: RestaurantCardProps) {
     };
 
     return (
-        <div className="group relative bg-white border border-outline-variant/10 card-hover-effect overflow-hidden rounded-md flex flex-col h-full">
+        <div className="group relative bg-white border border-outline-variant/10 overflow-hidden rounded-md flex flex-col h-full">
             {/* Image & Badges */}
             <Link to={`/restaurant/${restaurant.slug}`} className="relative h-60 overflow-hidden block">
                 <img
