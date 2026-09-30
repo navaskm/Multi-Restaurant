@@ -11,8 +11,8 @@ export default function AdminStats({ stats }: AdminStatsProps) {
     const kpiCards = [
         { title: "Active Diners", value: stats.users?.totalUsers, icon: Users },
         { title: "Partners", value: stats.users?.totalOwners, icon: ShieldCheck },
-        { title: "Total Venues", value: stats.restaurants?.total, icon: Utensils },
-        { title: "Bookings", value: stats.bookings?.total, icon: Calendar },
+        { title: "Total Venues", value: stats.totalRestaurants, icon: Utensils },
+        { title: "Bookings", value: stats.totalBookings, icon: Calendar },
     ];
 
     return (
